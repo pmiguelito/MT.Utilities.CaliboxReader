@@ -1,0 +1,37 @@
+helper:
+truncate table [dbo].[tCalLog];
+truncate table [dbo].[tCalMeasVal];
+truncate table [dbo].[tCalMeasValTemp];
+
+
+
+
+
+
+
+
+Errors:
+
+- G901 umwandeln in S901
+- S901 response true/false
+- G901 beim Relais umschaltung werden die daten nicht vollständig geliefert, weil die Daten werden neu gesendet bei neue modus
+
+während Calibration:
+- Sensor nicht mit odu verbunden => kein fehler, Kalibration geht weiter mit GUT
+- Sensor 1-Wire verbindung getrennt => keine direkte Antwort, BoxReset wird automatisch gesendet
+
+PARSER_ERROR:	CalibrationBox O2 is inProduction Mode
+PARSER_ERROR:	Betriebsmittel-Nr.: 30326849.255		HW_ID: 1	HW_Version: 01
+PARSER_ERROR:	****************************************************************************************************
+PARSER_ERROR:	**************************************  DipSwitch 02 **************************************************
+PARSER_ERROR:	Messbereich	Low1	Low2	High1	High2	Unit	TempRefVolt
+PARSER_ERROR:	R
+PARSER_ERROR:	FW: 2.1.0-0		Compiled: Feb 19 2019, 14:18:37
+PARSER_ERROR:	Current	+0.00000	+177.624	+177.600	+4755.20	[nA]
+PARSER_ERROR:	ErrorRaw	+4.00000	+16.0000	+400.000	+2000.00	[nA]
+PARSER_ERROR:	awVal	+12480.0	+56886.0	+13368.0	+36256.0	Incr	+1992.00
+PARSER_ERROR:	WepError	+4.00000	+24.0000	+200.000	+800.000	[nA]
+PARSER_ERROR:	CalError	+0.01600	+0.16000	+1.00000	+5.00000	[nA]
+
+opcode:	g100	BoxMode:	32	BoxMode_desc:	Box_Idle	CalStatus:	00	CalStatus_desc:	674mV and 500mV
+opcode:	g100	BoxMode:	1A	BoxMode_desc:	Box_StartSensorCalibration	CalStatus:	00	CalStatus_desc:	674mV and 500mV
