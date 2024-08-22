@@ -1,9 +1,0 @@
-Property,Description,AccessLevel,Bit,DataType,Start,Tol,Format,PhyicalUnit
-%CheckSum0,"CheckSum Pedro",CAL,8,UnInt,"",""
-%Attached_MfgrID,"Manufacturer Number Pedro",ID,14,UnInt,"",""
-%Attached_ModelNum,"Model Number Pedro",ID,15,UnInt,"",""
-%Attached_VersionNum,"Version Number Pedro",ID,6,UnInt,"",""
-%Attached_VersionLetter,"Version Letter Pedro",ID,5,Chr5,"",""
-%Attached_SerialNum,"Serial Number Pedro",ID,24,UnInt,"",""
-%Template_Selector,"Template Selector Pedro",ID,2,UnInt,"",""
-%Template_ID,"Template ID Pedro",ID,8,UnInt,"",""

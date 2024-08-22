@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO.Ports;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
 
 namespace O2_CalBox
 {
-	
-
     public delegate void showstring(string str);
 
     public partial class Form1 : Form
@@ -30,38 +20,35 @@ namespace O2_CalBox
             InitializeComponent();
             m_ShowString = new showstring(DispatchBoxPage);
             m_ShowSensorString = new showstring(DispatchSensorPage);
+            labelBoxStatus.Text = "";
 
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-
-            
             btnOpen.Enabled = true;
             btnClose.Enabled = false;
             try
-                {
+            {
 
                 timer1.Stop();
                 serialPort1.Close();
             }
             catch { MessageBox.Show("Comport ist geschlossen"); }
-
-
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            btnOpen.Enabled= false;
+            btnOpen.Enabled = false;
             btnClose.Enabled = true;
             try
             {
 
                 serialPort1.PortName = cboPort.Text;
                 serialPort1.Open();
-                serialPort1.BaudRate=19200;
+                serialPort1.BaudRate = 19200;
                 timer1.Start();
-        
+
             }
             catch { MessageBox.Show("Comport ist geschlossen"); }
         }
@@ -75,7 +62,8 @@ namespace O2_CalBox
             string[] X;//=A.Split(' ');
             string[] Y;//=A.Split(' ');
             string line_to_log;
-            if (A != "") {
+            if (A != "")
+            {
 
                 X = A.Split(' ');
                 Y = A.Split(';');
@@ -161,10 +149,10 @@ namespace O2_CalBox
                 }
 
 
-                if (( Y[0] == "g901")||(Y[0] == "g903") || (Y[0] == "g100"))
+                if ((Y[0] == "g901") || (Y[0] == "g903") || (Y[0] == "g100"))
                 {
-                    line_to_log=Time + ';' + labelBoxStatus.Text + ';' + A ;
-                    richTextBox1.AppendText(line_to_log);
+                    line_to_log = Time + ';' + labelBoxStatus.Text + ';' + A;
+                    richTextBox.AppendText(line_to_log);
 
                     //string path = @"MyTest.csv";
                     //// This text is added only once to the file.
@@ -189,11 +177,11 @@ namespace O2_CalBox
                 }
                 else
                 {
-                    richTextBox1.AppendText(A);
+                    richTextBox.AppendText(A);
                 }
-                    richTextBox1.ScrollToCaret();
+                richTextBox.ScrollToCaret();
 
-                    //                if ((X[0] == "#rdbx") && (X[1] == Constants.BoxCalTolerancePage.ToString("X2")))
+                //                if ((X[0] == "#rdbx") && (X[1] == Constants.BoxCalTolerancePage.ToString("X2")))
                 try
                 {
                     if (X[0] == "#rdbx")
@@ -222,14 +210,14 @@ namespace O2_CalBox
             string[] B;
             B = stream.Split(' ');
             string s = B[0];
-            int page = Convert.ToInt16(s,16);
+            int page = Convert.ToInt16(s, 16);
 
             int j;
             int Byte, crc, mask;
             uint checksum;
             int NumberChars = B[1].Length;
             byte[] bytes = new byte[NumberChars / 2];
-            for ( j = 0; j < NumberChars - 2; j += 2)
+            for (j = 0; j < NumberChars - 2; j += 2)
             {
                 bytes[j / 2] = Convert.ToByte(B[1].Substring(j, 2), 16);
             }
@@ -237,30 +225,30 @@ namespace O2_CalBox
             try
             {
                 switch (page)
-            {
-                //case Constants.BoxCalTolerancePage:
-                case 10:
-                    textBoxCAL_Low_1.Text = Convert.ToString(bytes[i + 1]  * 256 + bytes[i]); i += 2;
-                    textBoxCAL_Low_2.Text = Convert.ToString(bytes[i + 1]  * 256 + bytes[i]); i += 2;
-                    textBoxCAL_High_1.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
-                    textBoxCAL_High_2.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
+                {
+                    //case Constants.BoxCalTolerancePage:
+                    case 10:
+                        textBoxCAL_Low_1.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
+                        textBoxCAL_Low_2.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
+                        textBoxCAL_High_1.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
+                        textBoxCAL_High_2.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
 
-                    textBoxVER_Low_1.Text = Convert.ToString(bytes[i + 1]  * 256 + bytes[i]); i += 2;
-                    textBoxVER_Low_2.Text = Convert.ToString(bytes[i + 1]  * 256 + bytes[i]); i += 2;
-                    textBoxVER_High_1.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
-                    textBoxVER_High_2.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
+                        textBoxVER_Low_1.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
+                        textBoxVER_Low_2.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
+                        textBoxVER_High_1.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
+                        textBoxVER_High_2.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
 
-                    textBoxStdDevMB1L1.Text = Convert.ToString(bytes[i] / 10.0); i += 1;
-                    textBoxStdDevMB1L2.Text = Convert.ToString(bytes[i] / 10.0); i += 1;
-                    textBoxStdDevMB2L1.Text = Convert.ToString(bytes[i] / 10.0); i += 1;
-                    textBoxStdDevMB2L2.Text = Convert.ToString(bytes[i] / 10.0); i += 1;
+                        textBoxStdDevMB1L1.Text = Convert.ToString(bytes[i] / 10.0); i += 1;
+                        textBoxStdDevMB1L2.Text = Convert.ToString(bytes[i] / 10.0); i += 1;
+                        textBoxStdDevMB2L1.Text = Convert.ToString(bytes[i] / 10.0); i += 1;
+                        textBoxStdDevMB2L2.Text = Convert.ToString(bytes[i] / 10.0); i += 1;
 
 
-                    //int j;
-                    //int Byte, crc, mask;
-                    i = 0;
+                        //int j;
+                        //int Byte, crc, mask;
+                        i = 0;
 
-                    checksum = 0;             /* The checksum mod 2^16. */
+                        checksum = 0;             /* The checksum mod 2^16. */
 
                         for (int x = 0; x < 32; x++)
                         {
@@ -268,12 +256,12 @@ namespace O2_CalBox
                             checksum += bytes[x];
                             checksum &= 0xffff;       /* Keep it within bounds. */
                         }
-                        
-                    label_CS10.Text = checksum.ToString();//Convert.ToString(crc);
 
-                    break;
-                //case Constants.BoxCalSollValues:
-                case 31:
+                        label_CS10.Text = checksum.ToString();//Convert.ToString(crc);
+
+                        break;
+                    //case Constants.BoxCalSollValues:
+                    case 31:
                         textBoxMB1Zero.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
                         label17.Text = Convert.ToString((bytes[i + 1] * 256 + bytes[i] - 12480) * 0.004);
                         textBoxMB1_175nA.Text = Convert.ToString(bytes[i + 1] * 256 + bytes[i]); i += 2;
@@ -328,9 +316,9 @@ namespace O2_CalBox
 
 
 
+                }
             }
-            }
-            catch { MessageBox.Show("Somthing was wrong");  }
+            catch { MessageBox.Show("Somthing was wrong"); }
 
         }
         void DispatchSensorPage(string stream)
@@ -377,12 +365,12 @@ namespace O2_CalBox
                     //case Constants.SensorCalibrationDataPage:
                     case 14:
                         ihelper = (short)((((short)bytes[i + 1]) * 256) + (short)bytes[i]);
-                        fhelper = Convert.ToDouble((double)ihelper/100.0);
+                        fhelper = Convert.ToDouble((double)ihelper / 100.0);
                         labelTOff.Text = Convert.ToString(fhelper);
                         textBoxTOff.Text = Convert.ToString(ihelper); i += 2;
 
                         ihelper = (short)((((short)bytes[i + 1]) * 256) + (short)bytes[i]);
-                        fhelper =(ihelper / 100000.0)+1.0;
+                        fhelper = (ihelper / 100000.0) + 1.0;
                         labelTGain.Text = Convert.ToString(fhelper);
                         //labelTGain.Text = (fhelper.ToString());
                         textBoxTGain.Text = Convert.ToString((short)((((short)bytes[i + 1]) * 256) + (short)bytes[i])); i += 2;
@@ -393,17 +381,17 @@ namespace O2_CalBox
                         textBoxMB1Offset.Text = Convert.ToString(ihelper); i += 2;
 
                         ihelper = (short)((((short)bytes[i + 1]) * 256) + (short)bytes[i]);
-                        fhelper = (ihelper / 100000.0)+1.0;
+                        fhelper = (ihelper / 100000.0) + 1.0;
                         labelMB1Gain.Text = Convert.ToString(fhelper);
                         textBoxMB1Gain.Text = Convert.ToString((bytes[i + 1] * 256 + bytes[i])); i += 2;
 
                         ihelper = (short)(((bytes[i + 1]) * 256) + (short)bytes[i]);
-                        fhelper = Convert.ToDouble((double)ihelper );
+                        fhelper = Convert.ToDouble((double)ihelper);
                         labelMB2Off.Text = Convert.ToString(fhelper);
                         textBoxMB2Offset.Text = Convert.ToString(ihelper); i += 2;
 
                         ihelper = (short)((((short)bytes[i + 1]) * 256) + (short)bytes[i]);
-                        fhelper = (ihelper / 100000.0)+1.0;
+                        fhelper = (ihelper / 100000.0) + 1.0;
                         labelMB2Gain.Text = Convert.ToString(fhelper);
                         textBoxMB2Gain.Text = Convert.ToString((bytes[i + 1] * 256 + bytes[i])); i += 2;
 
@@ -422,7 +410,7 @@ namespace O2_CalBox
                         textBoxTGain30.Text = Convert.ToString((short)((((short)bytes[i + 1]) * 256) + (short)bytes[i])); i += 2;
 
                         ihelper = (short)((((short)bytes[i + 1]) * 256) + (short)bytes[i]);
-                        fhelper = Convert.ToDouble((double)ihelper );
+                        fhelper = Convert.ToDouble((double)ihelper);
                         labelMB1Offset30.Text = Convert.ToString(fhelper);
                         textBoxMB1Offset30.Text = Convert.ToString(ihelper); i += 2;
 
@@ -432,7 +420,7 @@ namespace O2_CalBox
                         textBoxMB1Gain30.Text = Convert.ToString((bytes[i + 1] * 256 + bytes[i])); i += 2;
 
                         ihelper = (short)(((bytes[i + 1]) * 256) + (short)bytes[i]);
-                        fhelper = Convert.ToDouble((double)ihelper );
+                        fhelper = Convert.ToDouble((double)ihelper);
                         labelMB2Offset30.Text = Convert.ToString(fhelper);
                         textBoxMB2Offset30.Text = Convert.ToString(ihelper); i += 2;
 
@@ -440,8 +428,6 @@ namespace O2_CalBox
                         fhelper = (ihelper / 100000.0) + 1.0;
                         labelMB2Gain30.Text = Convert.ToString(fhelper);
                         textBoxMB2Gain30.Text = Convert.ToString((bytes[i + 1] * 256 + bytes[i])); i += 2;
-
-
                         break;
 
 
@@ -517,7 +503,7 @@ namespace O2_CalBox
 
         private void button10_Click(object sender, EventArgs e)
         {
-            richTextBox1.Clear();
+            richTextBox.Clear();
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -566,7 +552,7 @@ namespace O2_CalBox
             cboPort.Items.AddRange(ports);
             cboPort.SelectedIndex = 0;
             btnClose.Enabled = false;
-         }
+        }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -662,7 +648,7 @@ namespace O2_CalBox
 
         private void label1_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void button20_Click(object sender, EventArgs e)
@@ -686,38 +672,38 @@ namespace O2_CalBox
             byte CS = 0;
             try
             {
-                RawErrorCurrLow_1 = Convert.ToInt16(textBoxCAL_Low_1.Text); 
-                RawErrorCurrLow_2 = Convert.ToInt16(textBoxCAL_Low_2.Text); 
-                RawErrorCurrHigh_1 = Convert.ToInt16(textBoxCAL_High_1.Text); 
-                RawErrorCurrHigh_2 = Convert.ToInt16(textBoxCAL_High_2.Text); 
+                RawErrorCurrLow_1 = Convert.ToInt16(textBoxCAL_Low_1.Text);
+                RawErrorCurrLow_2 = Convert.ToInt16(textBoxCAL_Low_2.Text);
+                RawErrorCurrHigh_1 = Convert.ToInt16(textBoxCAL_High_1.Text);
+                RawErrorCurrHigh_2 = Convert.ToInt16(textBoxCAL_High_2.Text);
 
-                VerErrorCurrLow_1 = Convert.ToInt16(textBoxVER_Low_1.Text); 
-                VerErrorCurrLow_2 = Convert.ToInt16(textBoxVER_Low_2.Text); 
-                VerErrorCurrHigh_1 = Convert.ToInt16(textBoxVER_High_1.Text); 
+                VerErrorCurrLow_1 = Convert.ToInt16(textBoxVER_Low_1.Text);
+                VerErrorCurrLow_2 = Convert.ToInt16(textBoxVER_Low_2.Text);
+                VerErrorCurrHigh_1 = Convert.ToInt16(textBoxVER_High_1.Text);
                 VerErrorCurrHigh_2 = Convert.ToInt16(textBoxVER_High_2.Text);
 
-                StdDevMB1L1 = Convert.ToByte(Convert.ToSingle(textBoxStdDevMB1L1.Text)*10.0);
+                StdDevMB1L1 = Convert.ToByte(Convert.ToSingle(textBoxStdDevMB1L1.Text) * 10.0);
                 StdDevMB1L2 = Convert.ToByte(Convert.ToSingle(textBoxStdDevMB1L2.Text) * 10.0);
                 StdDevMB2L1 = Convert.ToByte(Convert.ToSingle(textBoxStdDevMB2L1.Text) * 10.0);
                 StdDevMB2L2 = Convert.ToByte(Convert.ToSingle(textBoxStdDevMB2L2.Text) * 10.0);
 
-                CS += ((byte)RawErrorCurrLow_1);         s = ((byte)RawErrorCurrLow_1).ToString("X2");          Byte_cnt++;
-                CS += ((byte)(RawErrorCurrLow_1 >> 8)); s += ((byte)(RawErrorCurrLow_1 >> 8)).ToString("X2");   Byte_cnt++;
-                CS += ((byte)RawErrorCurrLow_2);        s += ((byte)RawErrorCurrLow_2).ToString("X2");          Byte_cnt++;
-                CS += ((byte)(RawErrorCurrLow_2 >> 8)); s += ((byte)(RawErrorCurrLow_2 >> 8)).ToString("X2");   Byte_cnt++;
-                CS += ((byte)RawErrorCurrHigh_1);       s += ((byte)RawErrorCurrHigh_1).ToString("X2");         Byte_cnt++;
-                CS += ((byte)(RawErrorCurrHigh_1>>8));  s += ((byte)(RawErrorCurrHigh_1 >> 8)).ToString("X2");  Byte_cnt++;
-                CS += ((byte)RawErrorCurrHigh_2);       s += ((byte)RawErrorCurrHigh_2).ToString("X2");         Byte_cnt++;
-                CS += ((byte)(RawErrorCurrHigh_2>>8));  s += ((byte)(RawErrorCurrHigh_2 >> 8)).ToString("X2");  Byte_cnt++;
+                CS += ((byte)RawErrorCurrLow_1); s = ((byte)RawErrorCurrLow_1).ToString("X2"); Byte_cnt++;
+                CS += ((byte)(RawErrorCurrLow_1 >> 8)); s += ((byte)(RawErrorCurrLow_1 >> 8)).ToString("X2"); Byte_cnt++;
+                CS += ((byte)RawErrorCurrLow_2); s += ((byte)RawErrorCurrLow_2).ToString("X2"); Byte_cnt++;
+                CS += ((byte)(RawErrorCurrLow_2 >> 8)); s += ((byte)(RawErrorCurrLow_2 >> 8)).ToString("X2"); Byte_cnt++;
+                CS += ((byte)RawErrorCurrHigh_1); s += ((byte)RawErrorCurrHigh_1).ToString("X2"); Byte_cnt++;
+                CS += ((byte)(RawErrorCurrHigh_1 >> 8)); s += ((byte)(RawErrorCurrHigh_1 >> 8)).ToString("X2"); Byte_cnt++;
+                CS += ((byte)RawErrorCurrHigh_2); s += ((byte)RawErrorCurrHigh_2).ToString("X2"); Byte_cnt++;
+                CS += ((byte)(RawErrorCurrHigh_2 >> 8)); s += ((byte)(RawErrorCurrHigh_2 >> 8)).ToString("X2"); Byte_cnt++;
 
-                CS += ((byte)VerErrorCurrLow_1);        s += ((byte)VerErrorCurrLow_1).ToString("X2");          Byte_cnt++;
-                CS += ((byte)(VerErrorCurrLow_1>>8));   s += ((byte)(VerErrorCurrLow_1 >> 8)).ToString("X2");   Byte_cnt++;
-                CS += ((byte)VerErrorCurrLow_2);        s += ((byte)VerErrorCurrLow_2).ToString("X2");          Byte_cnt++;
-                CS += ((byte)(VerErrorCurrLow_2>>8));   s += ((byte)(VerErrorCurrLow_2 >> 8)).ToString("X2");   Byte_cnt++;
-                CS += ((byte)VerErrorCurrHigh_1);       s += ((byte)VerErrorCurrHigh_1).ToString("X2");         Byte_cnt++;
-                CS += ((byte)(VerErrorCurrHigh_1>>8));  s += ((byte)(VerErrorCurrHigh_1 >> 8)).ToString("X2");  Byte_cnt++;
-                CS += ((byte)VerErrorCurrHigh_2);       s += ((byte)VerErrorCurrHigh_2).ToString("X2");         Byte_cnt++;
-                CS += ((byte)(VerErrorCurrHigh_2>>8));  s += ((byte)(VerErrorCurrHigh_2 >> 8)).ToString("X2");  Byte_cnt++;
+                CS += ((byte)VerErrorCurrLow_1); s += ((byte)VerErrorCurrLow_1).ToString("X2"); Byte_cnt++;
+                CS += ((byte)(VerErrorCurrLow_1 >> 8)); s += ((byte)(VerErrorCurrLow_1 >> 8)).ToString("X2"); Byte_cnt++;
+                CS += ((byte)VerErrorCurrLow_2); s += ((byte)VerErrorCurrLow_2).ToString("X2"); Byte_cnt++;
+                CS += ((byte)(VerErrorCurrLow_2 >> 8)); s += ((byte)(VerErrorCurrLow_2 >> 8)).ToString("X2"); Byte_cnt++;
+                CS += ((byte)VerErrorCurrHigh_1); s += ((byte)VerErrorCurrHigh_1).ToString("X2"); Byte_cnt++;
+                CS += ((byte)(VerErrorCurrHigh_1 >> 8)); s += ((byte)(VerErrorCurrHigh_1 >> 8)).ToString("X2"); Byte_cnt++;
+                CS += ((byte)VerErrorCurrHigh_2); s += ((byte)VerErrorCurrHigh_2).ToString("X2"); Byte_cnt++;
+                CS += ((byte)(VerErrorCurrHigh_2 >> 8)); s += ((byte)(VerErrorCurrHigh_2 >> 8)).ToString("X2"); Byte_cnt++;
 
                 CS += StdDevMB1L1; s += (StdDevMB1L1).ToString("X2"); Byte_cnt++;
                 CS += StdDevMB1L2; s += (StdDevMB1L2).ToString("X2"); Byte_cnt++;
@@ -726,9 +712,9 @@ namespace O2_CalBox
 
                 CS ^= 0xFF;
                 CS += 1;
-                
-                s = "#WRBX "+ Constants.BoxCalTolerancePage.ToString()+" "+ CS.ToString("X2") + s; Byte_cnt++;
-//                s = "#WRBX 10 "+ CS.ToString("X2") + s; Byte_cnt++;
+
+                s = "#WRBX " + Constants.BoxCalTolerancePage.ToString() + " " + CS.ToString("X2") + s; Byte_cnt++;
+                //                s = "#WRBX 10 "+ CS.ToString("X2") + s; Byte_cnt++;
                 //s = "#WRBX 10 " + "0E" + s; Byte_cnt++;
                 for (int i = Byte_cnt; i < 32; i++)
                 {
@@ -801,13 +787,13 @@ namespace O2_CalBox
                 MB2_P_1 = Convert.ToUInt16(textBoxMB2_175nA.Text);
                 MB2_P_2 = Convert.ToUInt16(textBoxMB2_4700nA.Text);
 
-                BoxNr= Convert.ToByte(textBoxNr.Text);
-                UpolErr = Convert.ToUInt16(textBoxUpolErr.Text); 
+                BoxNr = Convert.ToByte(textBoxNr.Text);
+                UpolErr = Convert.ToUInt16(textBoxUpolErr.Text);
 
                 TRaw_1 = Convert.ToUInt16(textBoxT5Deg.Text);
                 TRaw_2 = Convert.ToUInt16(textBoxT25Deg.Text);
                 TRaw_3 = Convert.ToUInt16(textBoxT50Deg.Text);
-                Terror= Convert.ToUInt16(textBoxTerror.Text);
+                Terror = Convert.ToUInt16(textBoxTerror.Text);
 
                 // P31 Calibrated RawValues from Box
                 CS += ((byte)MB1_P_1); s = ((byte)MB1_P_1).ToString("X2"); Byte_cnt++;
@@ -838,7 +824,7 @@ namespace O2_CalBox
                 CS ^= 0xFF;
                 CS += 1;
 
-//                s = "#WRBX " + Constants.BoxCalSollValues.ToString() + " " + CS.ToString("X2") + s; Byte_cnt++;
+                //                s = "#WRBX " + Constants.BoxCalSollValues.ToString() + " " + CS.ToString("X2") + s; Byte_cnt++;
                 s = "#WRBX 31 " + CS.ToString("X2") + s; Byte_cnt++;
                 //s = "#WRBX 10 " + "0E" + s; Byte_cnt++;
                 for (uint i = Byte_cnt; i < 32; i++)
@@ -927,7 +913,7 @@ namespace O2_CalBox
                 serialPort1.Write(s);
 
             }
-            catch { MessageBox.Show("Something Wrong");  }
+            catch { MessageBox.Show("Something Wrong"); }
 
         }
 
@@ -1017,7 +1003,7 @@ namespace O2_CalBox
         }
 
 
-private void button30_Click(object sender, EventArgs e)
+        private void button30_Click(object sender, EventArgs e)
         {
 
             string s;
@@ -1122,7 +1108,7 @@ private void button30_Click(object sender, EventArgs e)
 
             }
             catch { MessageBox.Show("Comport ist geschlossen"); }
-        
+
 
         }
 
