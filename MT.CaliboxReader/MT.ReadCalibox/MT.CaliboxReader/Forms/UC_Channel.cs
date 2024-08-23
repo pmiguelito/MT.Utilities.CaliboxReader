@@ -1791,6 +1791,12 @@ namespace ReadCalibox
         {
             if (ItemValues.ErrorDetected)
             {
+                _CalibNoAnswerCounter++;
+
+                if (_CalibNoAnswerCounter > 10)
+                {
+                    State = gProcMain.error;
+                }
                 return;
             }
 
