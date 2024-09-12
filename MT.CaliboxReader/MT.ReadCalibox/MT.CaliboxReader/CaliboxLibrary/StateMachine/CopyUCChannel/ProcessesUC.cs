@@ -161,7 +161,7 @@ namespace CaliboxLibrary.StateMachine.CopyUCChannel
                 if (wait < 1000) { wait = 1000; }
                 WaitingDetails.Wait_ms = wait;
                 WaitingDetails.AnswerGoNext = cmd.NextOnAnswer;
-                ProcessIncreese();
+                ProcessIncrease();
                 Device.Send(CmdSend);
                 return true;
             }
@@ -181,7 +181,7 @@ namespace CaliboxLibrary.StateMachine.CopyUCChannel
                 if (wait < 1000) { wait = 1000; }
                 WaitingDetails.Wait_ms = wait;
                 Device.Send(CmdSend);
-                ProcessIncreese();
+                ProcessIncrease();
                 return true;
             }
             catch
@@ -311,10 +311,10 @@ namespace CaliboxLibrary.StateMachine.CopyUCChannel
             return index;
         }
 
-        public void ProcessIncreese()
+        public void ProcessIncrease()
         {
             ProcessSelected.Increese();
-            WaitingDetails.Increese();
+            WaitingDetails.Increase();
             Logger.Save(ProcessSelected.Process.ToString(), $"{ProcessSelected.GetAttemptMessage()} [{WaitingDetails.GetTimeRemain()}]");
         }
 

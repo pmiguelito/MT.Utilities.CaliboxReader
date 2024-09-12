@@ -83,12 +83,12 @@ namespace CaliboxLibrary
         public static readonly string[] OpcodeHeader_G200 = new string[] { MN_Opcode, MN_BoxMode_HEX, MN_BoxErrorCode_HEX, MN_I_set, MN_I_AVG, MN_I_StdDev, MN_I_Error };
 
         /// <summary>
-        /// Read Box state and Measurement values No Temperatur
+        /// Read Box state and Measurement values No Temperature
         /// </summary>
         public static readonly string[] OpcodeHeader_G901 = new string[] { MN_Opcode, MN_BoxMode_HEX, MN_CalStatus_HEX, MN_I_set, MN_I_AVG, MN_I_StdDev, MN_I_Error };
 
         /// <summary>
-        /// Read Box state and Measurement values with Temperatur
+        /// Read Box state and Measurement values with Temperature
         /// </summary>
         public static readonly string[] OpcodeHeader_G901ext = new string[] { MN_Opcode, MN_BoxMode_HEX, MN_CalStatus_HEX, MN_I_set, MN_I_AVG, MN_I_StdDev, MN_I_Error, MN_Temp_set, MN_Temp_AVG, MN_Temp_StdDev, MN_Temp_Error };
         public static readonly string[] OpcodeHeader_G906 = new string[] { MN_Opcode, MN_I, MN_Iraw, MN_Temp, MN_TempVolt, MN_Upol, MN_UAnode, MN_MBrange };
@@ -240,7 +240,6 @@ namespace CaliboxLibrary
             return opcode;
         }
 
-        #region DT_Progress
         /************************************************
          * FUNCTION:    DataTable Progress
          * DESCRIPTION:
@@ -393,9 +392,7 @@ namespace CaliboxLibrary
             string dur = d.ToString("00.00");
             return dur;
         }
-        #endregion
 
-        #region DT_Measurement
         /************************************************
          * FUNCTION:    DataTable Measurement
          * DESCRIPTION:
@@ -471,10 +468,10 @@ namespace CaliboxLibrary
                         row[MN_BoxMode_HEX] = drv.BoxMode.Hex;
                         row[MN_BoxMode_Desc] = drv.BoxMode.Desc;
 
-                        row[MN_I_set] = drv.MeasValues.Iset.ValueNumeric;
-                        row[MN_I_AVG] = drv.MeasValues.Iavg?.ValueNumeric;
-                        row[MN_I_StdDev] = drv.MeasValues.IstdDev?.ValueNumeric;
-                        row[MN_I_Error] = drv.MeasValues.Ierror?.ValueNumeric;
+                        row[MN_I_set] = drv.MeasValues.ISet.ValueNumeric;
+                        row[MN_I_AVG] = drv.MeasValues.IAvg?.ValueNumeric;
+                        row[MN_I_StdDev] = drv.MeasValues.IStdDev?.ValueNumeric;
+                        row[MN_I_Error] = drv.MeasValues.IError?.ValueNumeric;
 
                         row[MN_Temp_set] = drv.MeasValues.TempSet?.ValueNumeric;
                         row[MN_Temp_AVG] = drv.MeasValues.TempAvg?.ValueNumeric;
@@ -502,6 +499,5 @@ namespace CaliboxLibrary
             }
             return false;
         }
-        #endregion
     }
 }

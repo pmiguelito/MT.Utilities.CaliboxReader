@@ -10,6 +10,7 @@ using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static ReadCalibox.clConfig;
 using static ReadCalibox.Handler;
@@ -1194,7 +1195,7 @@ namespace ReadCalibox
             var mainQuestion = "This will replace Page0 with default values." + Environment.NewLine + Environment.NewLine
                 + $"PartNumber: {header.SensorItem}" + Environment.NewLine
                 + $"SerialNumber: {header.SerialNum}" + Environment.NewLine + Environment.NewLine
-                + $"Highest SerialNumber: {Config_ChangeParameters.ConverterHighestSN}" + Environment.NewLine;
+                + $"Last Highest SerialNumber: {Config_ChangeParameters.ConverterHighestSN}" + Environment.NewLine;
             var question = title;
             var sn = header.SerialNum;
             if (int.TryParse(header.SerialNum, out int value))
@@ -1789,17 +1790,6 @@ namespace ReadCalibox
 
         public void TimCalibration_Tick(object sender, EventArgs e)
         {
-            if (ItemValues.ErrorDetected)
-            {
-                _CalibNoAnswerCounter++;
-
-                if (_CalibNoAnswerCounter > 10)
-                {
-                    State = gProcMain.error;
-                }
-                return;
-            }
-
             GetLastResponseCalibration(out var responses, out DeviceResponseValues last);
             try
             {
@@ -1849,7 +1839,11 @@ namespace ReadCalibox
                 {
                     _TimCalibration.Interval = 1000;
                     calibrationRunning = true;
-                    ProcessesUC.CMD_Send(State, CMD.G901);
+                    Task.Run(() =>
+                    {
+                        Task.Delay(12_000).Wait();
+                        ProcessesUC.CMD_Send(State, CMD.G901);
+                    });
                     _CountCalib++;
                     return;
                 }
@@ -1893,7 +1887,7 @@ namespace ReadCalibox
             }
             if (isFinalized || isError || _CalibNoAnswerCounter > 200)
             {
-                _TimCalibration.Stop();
+                //_TimCalibration.Stop();
                 ChartMeasurement.SetVisible(false);
 
                 if (last?.OpCodeResp == OpCode.s999)
@@ -1914,6 +1908,11 @@ namespace ReadCalibox
                     Logger.Save(State, OpCode.state, $"SUBPROCESS QUALITY GOOD {_StateMessageError}");
                     ProcessesUC.StopAndNext(gProcMain.Calibration, ProcState.Finished, out var nextProcess);
                 }
+                else if (IsStopped)
+                {
+                    State = gProcMain.TestFinished;
+                    _TimCalibration.Stop();
+                }
                 else
                 {
                     IsStopped = true;
@@ -1923,9 +1922,8 @@ namespace ReadCalibox
                     ItemValues.test_ok = false;
                     Logger.Save(State, OpCode.state, $"SUBPROCESS ERROR {_StateMessageError}");
                     ProcessesUC.CMD_Send(current, CMD.G200);
-                    _WaitingDetails.ProcessAfterWait = gProcMain.error;
                     _WaitingDetails.CalibrationRunning = false;
-                    _TimCalibration.Stop();
+                    //_TimCalibration.Stop();
                 }
                 return false;
             }

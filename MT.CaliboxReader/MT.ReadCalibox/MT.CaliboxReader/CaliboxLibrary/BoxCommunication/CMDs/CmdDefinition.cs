@@ -5,7 +5,7 @@
         public CmdDefinition(OpCode opcode, string cmdAdd = null, int wait = 0, int retry = 1)
         {
             CreateCommand(opcode, cmdAdd);
-            Description = opcode.ToString();
+            Name = opcode.ToString();
             WaitMilliseconds = wait;
             RetriesMax = retry;
         }
@@ -14,7 +14,7 @@
             return CommandTextWithData;
         }
 
-        public string Description { get; set; }
+        public string Name { get; set; }
 
         /**********************************************************
         * FUNCTION:     Command
@@ -80,7 +80,7 @@
         ***********************************************************/
 
         /// <summary>
-        /// Execute Next on answere received
+        /// Execute Next on answer received
         /// </summary>
         public bool NextOnAnswer { get; set; }
 
@@ -90,9 +90,8 @@
         public int WaitMilliseconds { get; set; }
 
         /// <summary>
-        /// Quntity of retries
+        /// Quantity of retries
         /// </summary>
         public int RetriesMax { get; set; }
-
     }
 }

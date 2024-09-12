@@ -7,21 +7,21 @@
          * DESCRIPTION:
          ************************************************/
         public MeasValues Meas_I = new MeasValues(DataBase.DbMeasBaseValues.I);
-        public MeasValue Iset { get { return Meas_I.Set; } }
-        public string I_Set { get => Iset?.Value; }
-        public double? I_SetDec { get => Iset?.ValueNumeric; }
+        public MeasValue ISet { get { return Meas_I.Set; } }
+        public string I_Set { get => ISet?.Value; }
+        public double? I_SetDec { get => ISet?.ValueNumeric; }
 
-        public MeasValue Iavg { get { return Meas_I.Avg; } }
-        public string I_AVG { get => Iavg?.Value; }
-        public double? I_AVGDec { get => Iavg?.ValueNumeric; }
+        public MeasValue IAvg { get { return Meas_I.Avg; } }
+        public string I_AVG { get => IAvg?.Value; }
+        public double? I_AVGDec { get => IAvg?.ValueNumeric; }
 
-        public MeasValue IstdDev { get { return Meas_I.StdDev; } }
-        public string I_StdDev { get => IstdDev?.Value; }
-        public double? I_StdDevDec { get => IstdDev?.ValueNumeric; }
+        public MeasValue IStdDev { get { return Meas_I.StdDev; } }
+        public string I_StdDev { get => IStdDev?.Value; }
+        public double? I_StdDevDec { get => IStdDev?.ValueNumeric; }
 
-        public MeasValue Ierror { get { return Meas_I.ErrorAbs; } }
-        public string I_Error { get => Ierror?.Value; }
-        public double? I_ErrorDec { get => Ierror?.ValueNumeric; }
+        public MeasValue IError { get { return Meas_I.ErrorAbs; } }
+        public string I_Error { get => IError?.Value; }
+        public double? I_ErrorDec { get => IError?.ValueNumeric; }
 
         public MeasValues Meas_Temp = new MeasValues(DataBase.DbMeasBaseValues.Temp);
         public MeasValue TempSet { get { return Meas_Temp.Set; } }

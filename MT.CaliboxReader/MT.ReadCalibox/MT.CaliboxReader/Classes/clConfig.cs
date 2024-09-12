@@ -116,6 +116,7 @@ namespace ReadCalibox
             Load_ChangeValues();
             Load_BeM();
             Load_SerialPorts(Config_Initvalues.CHquantity);
+
         }
 
         private static void Load_InitValues()
@@ -1094,7 +1095,6 @@ namespace ReadCalibox
             public static void Load() { ConfigFile.Load(); }
             public static void Save() { try { ConfigFile.Save(); Refresh(); } catch { } }
             public static void Refresh() { ConfigFile.RefreshSection(SectionNameCollection); }
-
 
             public void New(bool save = true, bool load = true)
             {

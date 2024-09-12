@@ -16,26 +16,19 @@ namespace CaliboxLibrary
 
         }
 
-        public WaitDetails(ProcessesUC processeUC)
+        public WaitDetails(ProcessesUC processUC)
         {
-            ProcessesUC = processeUC;
+            ProcessesUC = processUC;
         }
 
-        #region Process States
         /**********************************************************
         * FUNCTION:     Process States
         * DESCRIPTION:
         ***********************************************************/
-
         public bool CalibrationRunning { get; set; }
-        #endregion
 
         public gProcMain ProcessCurrent { get; set; }
-        public gProcMain ProcessAfterWait
-        {
-            get;
-            set;
-        }
+        public gProcMain ProcessAfterWait { get; set; }
         public string Message { get; set; }
         public int Wait_ms { get; set; }
 
@@ -78,7 +71,7 @@ namespace CaliboxLibrary
             return result;
         }
 
-        public DateTime LastMessageReceved { get; set; } = DateTime.MinValue;
+        public DateTime LastMessageReceived { get; set; } = DateTime.MinValue;
 
         public DeviceResponseValues DeviceResponseValues { get; set; }
         public void DataReceived(DeviceResponseValues data, bool answerReceived)
@@ -87,13 +80,13 @@ namespace CaliboxLibrary
             {
                 Answer_Received = answerReceived;
             }
-            LastMessageReceved = DateTime.Now;
+            LastMessageReceived = DateTime.Now;
             DeviceResponseValues = data;
             Message = data.Response;
         }
         public void DataReceived(DeviceResponseValues data)
         {
-            LastMessageReceved = DateTime.Now;
+            LastMessageReceived = DateTime.Now;
             DeviceResponseValues = data;
             if (OpCodeAnswerReceive == null)
             {
@@ -113,7 +106,7 @@ namespace CaliboxLibrary
                 Answer_Received = true;
             }
         }
-        #region Resets
+
         /**********************************************************
         * FUNCTION:     Resets
         * DESCRIPTION:
@@ -127,9 +120,9 @@ namespace CaliboxLibrary
 
         public void Reset(gProcMain current, int wait, gProcMain procAfterWait, bool waitAnswer = true)
         {
+            Wait_ms = wait;
             Reset(current);
             ProcessAfterWait = procAfterWait;
-            Wait_ms = wait;
             AnswerGoNext = waitAnswer;
         }
 
@@ -137,8 +130,7 @@ namespace CaliboxLibrary
         {
             Reset();
             ProcessCurrent = current;
-            TimeStart = DateTime.Now;
-            TimeEnd = TimeStart.AddMilliseconds(Wait_ms);
+            Increase();
         }
 
         public void Reset(gProcMain current, OpCode opCode)
@@ -148,11 +140,10 @@ namespace CaliboxLibrary
             OpCodeAnswerWaiting = opCode.GetOpposite();
         }
 
-        public void Increese()
+        public void Increase()
         {
             TimeStart = DateTime.Now;
             TimeEnd = TimeStart.AddMilliseconds(Wait_ms);
         }
-        #endregion
     }
 }

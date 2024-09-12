@@ -644,10 +644,10 @@ namespace CaliboxLibrary
                 }
                 if (drv.MeasValues.Meas_I.IsMeasValue)
                 {
-                    DB_InserValue(ref sbHeader, ref sbValues, MN_I_set, drv.MeasValues.Iset.ValueNumeric, true);
-                    DB_InserValue(ref sbHeader, ref sbValues, MN_I_AVG, drv.MeasValues.Iavg.ValueNumeric, true);
-                    DB_InserValue(ref sbHeader, ref sbValues, MN_I_StdDev, drv.MeasValues.IstdDev.ValueNumeric, true);
-                    DB_InserValue(ref sbHeader, ref sbValues, MN_I_Error, drv.MeasValues.Ierror.ValueNumeric, true);
+                    DB_InserValue(ref sbHeader, ref sbValues, MN_I_set, drv.MeasValues.ISet.ValueNumeric, true);
+                    DB_InserValue(ref sbHeader, ref sbValues, MN_I_AVG, drv.MeasValues.IAvg.ValueNumeric, true);
+                    DB_InserValue(ref sbHeader, ref sbValues, MN_I_StdDev, drv.MeasValues.IStdDev.ValueNumeric, true);
+                    DB_InserValue(ref sbHeader, ref sbValues, MN_I_Error, drv.MeasValues.IError.ValueNumeric, true);
                 }
                 if (drv.MeasValues.Meas_Temp.IsMeasValue)
                 {

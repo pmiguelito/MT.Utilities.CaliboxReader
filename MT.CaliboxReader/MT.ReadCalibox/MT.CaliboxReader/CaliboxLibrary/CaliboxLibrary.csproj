@@ -68,6 +68,7 @@
     <Compile Include="BoxCommunication\CMDs\EventRoutingArgs.cs" />
     <Compile Include="BoxCommunication\CMDs\CmdDefinition.cs" />
     <Compile Include="BoxCommunication\EventDataArgs.cs" />
+    <Compile Include="BoxCommunication\OpCodeResponseValue.cs" />
     <Compile Include="BoxCommunication\Responses\ResponseMeasValue.cs" />
     <Compile Include="DB\Evaluation.cs" />
     <Compile Include="Logger\LoggerWorker.cs" />

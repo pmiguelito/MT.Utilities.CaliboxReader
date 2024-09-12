@@ -59,30 +59,39 @@ namespace CaliboxLibrary
             });
         }
 
-        public static readonly CmdDefinition Init
-            = new CmdDefinition(OpCode.Init, wait: 1000)
-            {
-                Description = "Init status",
-                NextOnAnswer = true
-            };
+        /**********************************************************
+        * FUNCTION:     Init
+        * DESCRIPTION:
+        ***********************************************************/
 
-        public static readonly CmdDefinition init
-            = new CmdDefinition(OpCode.init, wait: 1000)
+        public static CmdDefinition New_Init()
+        {
+            CmdDefinition init = new CmdDefinition(OpCode.init, wait: 1000)
             {
-                Description = "init status",
+                Name = "init status",
                 NextOnAnswer = true
             };
+            return init;
+        }
+
+        private static CmdDefinition New_Init(OpCode opCode)
+        {
+            CmdDefinition init = new CmdDefinition(opCode, wait: 1000)
+            {
+                Name = "init status",
+                NextOnAnswer = true
+            };
+            return init;
+        }
+
+        public static readonly CmdDefinition Init = New_Init(OpCode.Init);
+
+        public static readonly CmdDefinition init = New_Init(OpCode.init);
 
         /**********************************************************
         * FUNCTION:     Get Commands
         * DESCRIPTION:
         ***********************************************************/
-        public static readonly CmdDefinition G100
-            = new CmdDefinition(OpCode.G100, wait: 2000, retry: 3)
-            {
-                Description = "[G100] Get BoxStatus",
-                NextOnAnswer = true
-            };
 
         /// <summary>
         /// Get Box status
@@ -94,17 +103,12 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G100, wait: wait, retry: retry)
             {
-                Description = G100.Description,
+                Name = "[G100] Get BoxStatus",
                 NextOnAnswer = true
             };
         }
 
-        public static readonly CmdDefinition G015
-            = new CmdDefinition(OpCode.G015, wait: 2000, retry: 3)
-            {
-                Description = "[G015] Sample Page 15",
-                NextOnAnswer = true
-            };
+        public static readonly CmdDefinition G100 = New_G100();
 
         /// <summary>
         /// Sensor Read Page 15
@@ -116,16 +120,12 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G015, wait: wait, retry: retry)
             {
-                Description = G015.Description,
+                Name = "[G015] Sample Page 15",
                 NextOnAnswer = true
             };
         }
 
-        public static readonly CmdDefinition G200
-            = new CmdDefinition(OpCode.G200, wait: 2000, retry: 3)
-            {
-                Description = "[G200] Get Error values"
-            };
+        public static readonly CmdDefinition G015 = New_G015();
 
         /// <summary>
         /// Box prepare for next calibration
@@ -137,15 +137,12 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G200, wait: wait)
             {
-                Description = G200.Description
+                Name = "[G200] Get Error values",
+                NextOnAnswer = true,
             };
         }
 
-        public static readonly CmdDefinition G901
-            = new CmdDefinition(OpCode.G901, wait: 1000)
-            {
-                Description = "[G901] Enable print out Mean/StdDev"
-            };
+        public static readonly CmdDefinition G200 = New_G200();
 
         /// <summary>
         /// Enable print out Mean/StdDev
@@ -156,15 +153,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G901, wait: wait)
             {
-                Description = G901.Description
+                Name = "[G901] Enable print out Mean/StdDev"
             };
         }
 
-        public static readonly CmdDefinition G902
-            = new CmdDefinition(OpCode.G902, wait: 1000)
-            {
-                Description = "[G902] Enable print out Measurement per second"
-            };
+        public static readonly CmdDefinition G901 = New_G901();
 
         /// <summary>
         /// Enable print out Measurement per second
@@ -175,15 +168,10 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G902, wait: wait)
             {
-                Description = G902.Description
+                Name = "[G902] Enable print out Measurement per second"
             };
         }
-
-        public static readonly CmdDefinition G904
-            = new CmdDefinition(OpCode.G904, wait: 1000)
-            {
-                Description = "[G904] Measures Pol. Voltage Cathode/GND"
-            };
+        public static readonly CmdDefinition G902 = New_G902();
 
         /// <summary>
         /// Measures Pol. Voltage Cathode/GND
@@ -194,15 +182,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G904, wait: wait)
             {
-                Description = G904.Description
+                Name = "[G904] Measures Pol. Voltage Cathode/GND"
             };
         }
+        public static readonly CmdDefinition G904 = New_G904();
 
-        public static readonly CmdDefinition G905
-            = new CmdDefinition(OpCode.G905, wait: 1000)
-            {
-                Description = "[G905] Measures Pol. Voltage Anode/GND"
-            };
 
         /// <summary>
         /// Measures Pol. Voltage Anode/GND
@@ -213,15 +197,10 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G905, wait: wait)
             {
-                Description = G905.Description
+                Name = "[G905] Measures Pol. Voltage Anode/GND"
             };
         }
-
-        public static readonly CmdDefinition G906
-            = new CmdDefinition(OpCode.G906, wait: 1000)
-            {
-                Description = "[G906] Sensor Page 16 incl. Decode"
-            };
+        public static readonly CmdDefinition G905 = New_G905();
 
         /// <summary>
         /// Sensor Page 16 incl. Decode
@@ -232,15 +211,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G906, wait: wait, retry: retry)
             {
-                Description = G906.Description
+                Name = "[G906] Sensor Page 16 incl. Decode"
             };
         }
 
-        public static readonly CmdDefinition G907
-            = new CmdDefinition(OpCode.G907, wait: 1000)
-            {
-                Description = "[G907] Set 0nA"
-            };
+        public static readonly CmdDefinition G906 = New_G906();
 
         /// <summary>
         /// Set 0nA
@@ -251,15 +226,10 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G907, wait: wait)
             {
-                Description = G907.Description
+                Name = "[G907] Set 0nA"
             };
         }
-
-        public static readonly CmdDefinition G908
-            = new CmdDefinition(OpCode.G908, wait: 1000)
-            {
-                Description = "[G908] Set 175nA"
-            };
+        public static readonly CmdDefinition G907 = New_G907();
 
         /// <summary>
         /// Set 175nA
@@ -270,15 +240,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G908, wait: wait)
             {
-                Description = G908.Description
+                Name = "[G908] Set 175nA"
             };
         }
 
-        public static readonly CmdDefinition G909
-            = new CmdDefinition(OpCode.G909, wait: 1000)
-            {
-                Description = "[G909] Set 4700nA"
-            };
+        public static readonly CmdDefinition G908 = New_G908();
 
         /// <summary>
         /// Set 4700nA
@@ -289,15 +255,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G909, wait: wait)
             {
-                Description = G909.Description
+                Name = "[G909] Set 4700nA"
             };
         }
 
-        public static readonly CmdDefinition G910
-            = new CmdDefinition(OpCode.G910, wait: 3000)
-            {
-                Description = "[G910] UPol. Check"
-            };
+        public static readonly CmdDefinition G909 = New_G909();
 
         /// <summary>
         /// UPol Check
@@ -308,15 +270,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G910, wait: wait)
             {
-                Description = G910.Description
+                Name = "[G910] UPol. Check"
             };
         }
 
-        public static readonly CmdDefinition G911
-            = new CmdDefinition(OpCode.G911, wait: 3000)
-            {
-                Description = "[G911] Temp. Check NTC 25°C"
-            };
+        public static readonly CmdDefinition G910 = New_G910();
 
         /// <summary>
         /// Temp. Check NTC 25°C
@@ -327,15 +285,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G911, wait: wait)
             {
-                Description = G911.Description
+                Name = "[G911] Temp. Check NTC 25°C"
             };
         }
 
-        public static readonly CmdDefinition G913
-            = new CmdDefinition(OpCode.G913, wait: 3000)
-            {
-                Description = "[G913] Set UPol. 500mV"
-            };
+        public static readonly CmdDefinition G911 = New_G911();
 
         /// <summary>
         /// Set UPol. 500mV
@@ -346,15 +300,10 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G913, wait: wait)
             {
-                Description = G913.Description
+                Name = "[G913] Set UPol. 500mV"
             };
         }
-
-        public static readonly CmdDefinition G914
-            = new CmdDefinition(OpCode.G914, wait: 3000)
-            {
-                Description = "[G914] Set UPol. 674mV"
-            };
+        public static readonly CmdDefinition G913 = New_G913();
 
         /// <summary>
         /// Set UPol. 674mV
@@ -365,15 +314,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G914, wait: wait)
             {
-                Description = G914.Description
+                Name = "[G914] Set UPol. 674mV"
             };
         }
 
-        public static readonly CmdDefinition G915
-            = new CmdDefinition(OpCode.G915, wait: 3000)
-            {
-                Description = "[G915] Temp. Check PT 20°C"
-            };
+        public static readonly CmdDefinition G914 = New_G914();
 
         /// <summary>
         /// Temp. Check PT 20°C
@@ -384,15 +329,11 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G915, wait: wait)
             {
-                Description = G915.Description
+                Name = "[G915] Temp. Check PT 20°C"
             };
         }
 
-        public static readonly CmdDefinition G916
-            = new CmdDefinition(OpCode.G916, wait: 3000)
-            {
-                Description = "[G916] Temp. Check PT 30°C"
-            };
+        public static readonly CmdDefinition G915 = New_G915();
 
         /// <summary>
         /// Temp. Check PT 30°C
@@ -403,26 +344,27 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.G916, wait: wait)
             {
-                Description = G916.Description
+                Name = "[G916] Temp. Check PT 30°C"
             };
         }
+        public static readonly CmdDefinition G916 = New_G916();
 
         public static readonly CmdDefinition RDBX00
             = new CmdDefinition(OpCode.RDBX, cmdAdd: "00", wait: 1000)
             {
-                Description = $"[#RDBX] Read Box page 00"
+                Name = $"[#RDBX] Read Box page 00"
             };
 
         public static readonly CmdDefinition RDBX10
             = new CmdDefinition(OpCode.RDBX, cmdAdd: "10", wait: 1000)
             {
-                Description = $"[#RDBX] Read Box page 10"
+                Name = $"[#RDBX] Read Box page 10"
             };
 
         public static readonly CmdDefinition RDBX31
             = new CmdDefinition(OpCode.RDBX, cmdAdd: "31", wait: 1000)
             {
-                Description = $"[#RDBX] Read Box page 31"
+                Name = $"[#RDBX] Read Box page 31"
             };
 
         /// <summary>
@@ -434,7 +376,7 @@ namespace CaliboxLibrary
         {
             var result = new CmdDefinition(OpCode.RDBX, cmdAdd: page.ToString(), wait: wait)
             {
-                Description = $"[#RDBX] Read Box page {page:00}"
+                Name = $"[#RDBX] Read Box page {page:00}"
             };
             return result;
         }
@@ -442,37 +384,37 @@ namespace CaliboxLibrary
         public static readonly CmdDefinition RDPG00
             = new CmdDefinition(OpCode.RDPG, cmdAdd: "00", wait: 1000)
             {
-                Description = $"[#RDPG] Read Sensor page 00"
+                Name = $"[#RDPG] Read Sensor page 00"
             };
 
         public static readonly CmdDefinition WRPG00
             = new CmdDefinition(OpCode.WRPG, cmdAdd: "00", wait: 1000)
             {
-                Description = $"[#WRPG] Write Sensor page 00"
+                Name = $"[#WRPG] Write Sensor page 00"
             };
 
         public static readonly CmdDefinition RDPG01
             = new CmdDefinition(OpCode.RDPG, cmdAdd: "01", wait: 1000)
             {
-                Description = $"[#RDPG] Read Sensor page 01"
+                Name = $"[#RDPG] Read Sensor page 01"
             };
 
         public static readonly CmdDefinition WRPG01
             = new CmdDefinition(OpCode.WRPG, cmdAdd: "01", wait: 1000)
             {
-                Description = $"[#WRPG] Write Sensor page 01"
+                Name = $"[#WRPG] Write Sensor page 01"
             };
 
         public static readonly CmdDefinition RDPG02
             = new CmdDefinition(OpCode.RDPG, cmdAdd: "02", wait: 1000)
             {
-                Description = $"[#RDPG] Read Sensor page 02"
+                Name = $"[#RDPG] Read Sensor page 02"
             };
 
         public static readonly CmdDefinition WRPG02
             = new CmdDefinition(OpCode.WRPG, cmdAdd: "02", wait: 1000)
             {
-                Description = $"[#WRPG] Write Sensor page 02"
+                Name = $"[#WRPG] Write Sensor page 02"
             };
 
         /// <summary>
@@ -484,7 +426,7 @@ namespace CaliboxLibrary
         {
             var result = new CmdDefinition(OpCode.RDPG, cmdAdd: page.ToString(), wait: wait)
             {
-                Description = $"[#RDPG] Read Sensor page {page:00}"
+                Name = $"[#RDPG] Read Sensor page {page:00}"
             };
             return result;
         }
@@ -504,14 +446,14 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.S200, wait: wait)
             {
-                Description = "[S200] Prepare for next calibration"
+                Name = "[S200] Prepare for next calibration"
             };
         }
 
         public static readonly CmdDefinition S100
             = new CmdDefinition(OpCode.S100, wait: 3000)
             {
-                Description = "[S100] Start Calib. UPol: 500mV and 674mV"
+                Name = "[S100] Start Calib. UPol: 500mV and 674mV"
             };
 
         /// <summary>
@@ -523,13 +465,13 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.S100, wait: wait)
             {
-                Description = S100.Description
+                Name = S100.Name
             };
         }
         public static readonly CmdDefinition S500
             = new CmdDefinition(OpCode.S500, wait: 3000)
             {
-                Description = "[S500] Start Calib. UPol: 500mV"
+                Name = "[S500] Start Calib. UPol: 500mV"
             };
 
         /// <summary>
@@ -541,14 +483,14 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.S500, wait: wait)
             {
-                Description = S500.Description
+                Name = S500.Name
             };
         }
 
         public static readonly CmdDefinition S674
             = new CmdDefinition(OpCode.S674, wait: 3000)
             {
-                Description = "[S674] Start Calib. UPol: 674mV"
+                Name = "[S674] Start Calib. UPol: 674mV"
             };
 
         /// <summary>
@@ -560,30 +502,30 @@ namespace CaliboxLibrary
         {
             return new CmdDefinition(OpCode.S674, wait: wait)
             {
-                Description = S674.Description
+                Name = S674.Name
             };
         }
 
-        public static readonly CmdDefinition S999
-            = new CmdDefinition(OpCode.S999, wait: 4000)
-            {
-                Description = "[S999] InitBox",
-                NextOnAnswer = true
-            };
-
         /// <summary>
-        /// Initialization Calibox
+        /// Initialization CaliBox
         /// </summary>
         /// <param name="wait"></param>
         /// <returns></returns>
         public static CmdDefinition New_S999(int wait = 5000)
         {
+            if (_S999 != null)
+            {
+                return _S999;
+            }
+
             return new CmdDefinition(OpCode.S999, wait: wait)
             {
-                Description = S999.Description,
+                Name = "[S999] InitBox",
                 NextOnAnswer = true
             };
         }
+        private static CmdDefinition _S999;
+        public static readonly CmdDefinition S999 = New_S999();
 
         /**********************************************************
         * FUNCTION:     CMD Sequences
@@ -591,15 +533,16 @@ namespace CaliboxLibrary
         ***********************************************************/
         public static CmdSequence New_InitBox()
         {
-            var result = new CmdSequence(CMDs.Calib_S100_6850i)
+            //var result = new CmdSequence(CMDs.Calib_S100_6850i)
+            var result = new CmdSequence(CMDs.InitBox_S999)
             {
-                Description = "[S999] + [G015] + [G906] + [G901] InitBox",
+                Description = "[S999] + [G015] + [G901] InitBox",
+                //Description = "[S999] + [G015] + [G906] + [G901] InitBox",
                 Routing = new List<CmdDefinition>()
                     {
-                        New_S999(wait: 4000),
-                        New_G015(wait: 1000, retry: 2),
-                        //New_G906(wait: 1000, retry: 1),
-                        //New_G901(wait: 1000)
+                        New_S999(),
+                        New_G015(),
+                        New_G901()
                     }
             };
             return result;
@@ -677,11 +620,12 @@ namespace CaliboxLibrary
         {
             var result = new CmdSequence(CMDs.Calib_S100_6850i)
             {
-                Description = "[G100] + [S100] Start Calib. UPol: 500mV and 674mV",
+                Description = "[G100] + [S100] + [G901] Start Calib. UPol: 500mV and 674mV",
                 Routing = new List<CmdDefinition>()
                     {
-                        New_G100(),
-                        New_S100(wait: waitStart)
+                        //New_G100(),
+                        New_S100(wait: waitStart),
+                        //New_G901(),
                     }
             };
             return result;
@@ -726,7 +670,7 @@ namespace CaliboxLibrary
         }
 
         /**********************************************************
-        * FUNCTION:     Temperatur Check
+        * FUNCTION:     Temperature Check
         * DESCRIPTION:
         ***********************************************************/
 
@@ -742,9 +686,9 @@ namespace CaliboxLibrary
                 Routing = new List<CmdDefinition>()
                     {
                         New_G911(wait: 14000),
-                        New_G906(wait: 1000, retry: 15)
                     }
             };
+            //AddG906(result, 15);
             return result;
         }
 
@@ -760,9 +704,9 @@ namespace CaliboxLibrary
                 Routing = new List<CmdDefinition>()
                     {
                         New_G915(wait: 14000),
-                        New_G906(wait: 1000, retry: 15)
                     }
             };
+            //AddG906(result, 15);
             return result;
         }
 
@@ -778,9 +722,9 @@ namespace CaliboxLibrary
                 Routing = new List<CmdDefinition>()
                     {
                         New_G916(wait: 14000),
-                        New_G906(wait: 1000, retry: 15)
                     }
             };
+            //AddG906(result, 15);
             return result;
         }
 
@@ -801,9 +745,9 @@ namespace CaliboxLibrary
                 Routing = new List<CmdDefinition>()
                     {
                         New_G910(wait: 16000),
-                        New_G906(wait: 1000, retry: 10)
                     }
             };
+            AddG906(result, 10);
             return result;
         }
 
@@ -819,12 +763,18 @@ namespace CaliboxLibrary
                 Routing = new List<CmdDefinition>()
                     {
                         New_G913(wait: 16000),
-                        New_G906(wait: 1000, retry: 10)
                     }
             };
+            AddG906(result, 10);
             return result;
         }
-
+        private static void AddG906(CmdSequence cmd, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                cmd.Routing.Add(New_G906(wait: 1000, retry: 1));
+            }
+        }
         /// <summary>
         /// [G914] + [906]
         /// </summary>
@@ -837,9 +787,9 @@ namespace CaliboxLibrary
                 Routing = new List<CmdDefinition>()
                     {
                         New_G914(wait: 16000),
-                        New_G906(wait: 1000, retry: 10)
                     }
             };
+            AddG906(result, 10);
             return result;
         }
 
@@ -876,7 +826,7 @@ namespace CaliboxLibrary
                 Description = $"[#RDPG] Read Sensor page 00",
                 Routing = new List<CmdDefinition>()
                     {
-                        New_ReadPageSensor(0),
+                        New_ReadPageSensor(page: 0),
                     }
             };
             return result;
@@ -893,7 +843,7 @@ namespace CaliboxLibrary
                 Description = $"[#RDPG] Read Sensor page 01",
                 Routing = new List<CmdDefinition>()
                     {
-                        New_ReadPageSensor(1),
+                        New_ReadPageSensor(page: 1),
                     }
             };
             return result;
@@ -910,7 +860,7 @@ namespace CaliboxLibrary
                 Description = $"[#RDPG] Read Sensor page 02",
                 Routing = new List<CmdDefinition>()
                     {
-                        New_ReadPageSensor(2),
+                        New_ReadPageSensor(page: 2),
                     }
             };
             return result;
@@ -935,8 +885,11 @@ namespace CaliboxLibrary
         * FUNCTION:     CMDs
         * DESCRIPTION:
         ***********************************************************/
-        public static readonly Dictionary<string, CmdDefinition> CmdDefinitions
-            = new Dictionary<string, CmdDefinition>()
+        public static readonly Dictionary<string, CmdDefinition> CmdDefinitions = CreateDictionary();
+
+        private static Dictionary<string, CmdDefinition> CreateDictionary()
+        {
+            var cmds = new Dictionary<string, CmdDefinition>()
             {
                 { Init.CommandText, Init },
                 { init.CommandText, init },
@@ -951,6 +904,7 @@ namespace CaliboxLibrary
                 { G906.CommandText, G906 },
                 { G907.CommandText, G907 },
                 { G908.CommandText, G908 },
+                { G909.CommandText, G909 },
                 { G910.CommandText, G910 },
                 { G911.CommandText, G911 },
                 { G913.CommandText, G913 },
@@ -975,6 +929,8 @@ namespace CaliboxLibrary
                 { RDBX10.CommandText, RDBX10 },
                 { RDBX31.CommandText, RDBX31 },
             };
+            return cmds;
+        }
 
         public static string CreateCommandText(OpCode opCode, string add, out string data)
         {

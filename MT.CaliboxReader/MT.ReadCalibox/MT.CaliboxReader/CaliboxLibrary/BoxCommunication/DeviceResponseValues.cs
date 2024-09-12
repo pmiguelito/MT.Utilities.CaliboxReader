@@ -24,9 +24,9 @@ namespace CaliboxLibrary
         public DeviceResponseValues(CmdSend cmd, string data = null, ChannelValues limits = null)
         {
             meas_time_start = DateTime.Now;
-            CmdSended = cmd;
+            CmdSend = cmd;
             OpCodeRequest = cmd.OpCode;
-            CmdSendedText = cmd.CmdText;
+            CmdSendText = cmd.CmdText;
             Limits = limits;
             InitParse(data);
         }
@@ -45,10 +45,10 @@ namespace CaliboxLibrary
             ResponseParsedLog = value;
         }
 
-        public DeviceResponseValues(string boxmodeHex, string value, BoxErrorMode errorCode = null)
+        public DeviceResponseValues(string boxModeHex, string value, BoxErrorMode errorCode = null)
         {
             meas_time_start = DateTime.Now;
-            BoxMode_hex = boxmodeHex;
+            BoxMode_hex = boxModeHex;
             BoxMeasValue = value;
             if (errorCode != null)
             {
@@ -63,9 +63,9 @@ namespace CaliboxLibrary
          * FUNCTION:    Header
          * DESCRIPTION:
          ************************************************/
-        public CmdSend CmdSended { get; private set; }
+        public CmdSend CmdSend { get; private set; }
         public OpCode OpCodeRequest { get; private set; }
-        public string CmdSendedText { get; private set; }
+        public string CmdSendText { get; private set; }
 
         private OpCodeResponse _OpCodeResponse;
         public OpCodeResponse OpCodeResponse

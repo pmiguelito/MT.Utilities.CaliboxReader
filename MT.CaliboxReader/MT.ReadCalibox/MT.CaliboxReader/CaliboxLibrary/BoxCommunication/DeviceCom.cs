@@ -388,16 +388,16 @@ namespace CaliboxLibrary
             InsertReceivedAsync();
         }
 
-        private bool IsInserting;
+        private bool _IsInserting;
         private Task InsertReceivedAsync()
         {
             return Task.Run(() =>
             {
-                if (IsInserting)
+                if (_IsInserting)
                 {
                     return;
                 }
-                IsInserting = true;
+                _IsInserting = true;
                 try
                 {
                     WhileResponse();
@@ -406,7 +406,7 @@ namespace CaliboxLibrary
                 }
                 finally
                 {
-                    IsInserting = false;
+                    _IsInserting = false;
                 }
             });
         }
@@ -585,9 +585,9 @@ namespace CaliboxLibrary
             return SetProgressAsync(drv);
         }
 
-        public Task SetUIProgressAsync(string boxmode_hex, string value = null, string errorcode = null)
+        public Task SetUIProgressAsync(string boxMode_hex, string value = null, string errorcode = null)
         {
-            var drv = new DeviceResponseValues(boxmode_hex, value, errorcode);
+            var drv = new DeviceResponseValues(boxMode_hex, value, errorcode);
             return SetProgressAsync(drv);
         }
 

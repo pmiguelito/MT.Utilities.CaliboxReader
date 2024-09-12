@@ -20,44 +20,50 @@ namespace CaliboxLibrary
         public Enum CMDs { get; private set; }
         public List<CmdDefinition> Routing { get; set; } = new List<CmdDefinition>();
 
+        /**********************************************************
+        * FUNCTION:     Events
+        * DESCRIPTION:
+        ***********************************************************/
+        public EventHandler<EventRoutingArgs> CommandSend;
+        public void OnCommandSend(object sender, CmdDefinition routine)
+        {
+            try
+            {
+                if (routine == null)
+                {
+                    return;
+                }
+                IsRunning = true;
+                IsDataReceived = false;
+                RetriesCount++;
+                TimeCmdSend = DateTime.Now;
+                CommandSend?.Invoke(sender, new EventRoutingArgs(routine));
+            }
+            catch
+            {
+
+            }
+        }
+
+        /**********************************************************
+        * FUNCTION:     Current
+        * DESCRIPTION:
+        ***********************************************************/
+
         public int Index { get; private set; }
 
-        public CmdDefinition SelectedRoutine { get; private set; }
+        public CmdDefinition Current { get; private set; }
 
-        /// <summary>
-        /// Send S999 at the beginning
-        /// </summary>
-        public bool InitializeCaliBox { get; private set; }
-
-        private bool _IsRunning;
-        public bool IsRunning
+        public bool IsRetry
         {
             get
             {
-                return _IsRunning;
-            }
-            set
-            {
-                _IsRunning = value;
-            }
-        }
-        public int RetriesCount { get; set; }
-        public DateTime TimeCmdSend { get; set; } = DateTime.MinValue;
-
-        public TimeSpan GetElapsed()
-        {
-            return DateTime.Now - TimeCmdSend;
-        }
-
-        public bool IsTimeElapsed
-        {
-            get
-            {
-                if (SelectedRoutine?.WaitMilliseconds < 1)
+                if (Current == null)
                 {
-                    return true;
+                    return false;
                 }
-                if (GetElapsed().TotalMilliseconds > SelectedRoutine?.WaitMilliseconds)
+
+                if (RetriesCount < Current?.RetriesMax)
                 {
                     return true;
                 }
@@ -65,47 +71,67 @@ namespace CaliboxLibrary
             }
         }
 
-        public bool IsRetry
+        private bool TrySetCurrent(int index)
         {
-            get
+            Index = index;
+            if (index < Routing.Count)
             {
-                if (SelectedRoutine?.RetriesMax < 2)
-                {
-                    return false;
-                }
-                if (RetriesCount >= SelectedRoutine?.RetriesMax)
-                {
-                    return false;
-                }
+                Current = Routing[index];
+                RetriesCount = 0;
+                IsDataReceived = false;
+            }
+            return false;
+        }
+
+        /**********************************************************
+        * FUNCTION:     Status
+        * DESCRIPTION:
+        ***********************************************************/
+
+        /// <summary>
+        /// Send S999 at the beginning
+        /// </summary>
+        public bool InitializeCaliBox { get; private set; }
+
+        public bool IsRunning { get; private set; }
+
+        public int RetriesCount { get; set; }
+
+        public DateTime TimeCmdSend { get; set; } = DateTime.MinValue;
+
+        public TimeSpan GetElapsed()
+        {
+            return DateTime.Now - TimeCmdSend;
+        }
+
+        public bool IsTimeElapsed()
+        {
+            if (Current == null)
+            {
                 return true;
             }
-        }
-        public int Send(int nowRunningIndex)
-        {
-            if (IsRunning == false)
+
+            if (Current?.WaitMilliseconds < 1)
             {
-                IsRunning = true;
-                RetriesCount++;
-                TimeCmdSend = DateTime.Now;
-                OnCommandSended(this, SelectedRoutine);
-                return nowRunningIndex;
+                return true;
             }
-            if (IsTimeElapsed)
+            if (GetElapsed().TotalMilliseconds > Current?.WaitMilliseconds)
             {
-                if (IsRetry)
-                {
-                    RetriesCount++;
-                    TimeCmdSend = DateTime.Now;
-                    OnCommandSended(this, SelectedRoutine);
-                    return nowRunningIndex;
-                }
-                nowRunningIndex++;
+                return true;
             }
-            return nowRunningIndex;
+            return false;
         }
+
+        public bool IsDataReceived { get; set; }
+
+        /**********************************************************
+        * FUNCTION:     Start/Stop
+        * DESCRIPTION:
+        ***********************************************************/
 
         public void Reset()
         {
+            IsDataReceived = false;
             IsRunning = false;
             Index = 0;
             RetriesCount = 0;
@@ -116,7 +142,8 @@ namespace CaliboxLibrary
         {
             Reset();
             Init_Timer();
-            SelectedRoutine = Routing[Index];
+            TrySetCurrent(0);
+            IsRunning = true;
             _TimerSender?.Start();
         }
 
@@ -124,26 +151,7 @@ namespace CaliboxLibrary
         {
             Reset();
         }
-        /**********************************************************
-        * FUNCTION:     Events
-        * DESCRIPTION:
-        ***********************************************************/
-        public EventHandler<EventRoutingArgs> CommandSended;
-        public void OnCommandSended(object sender, CmdDefinition routine)
-        {
-            try
-            {
-                if (routine == null)
-                {
-                    return;
-                }
-                CommandSended?.Invoke(sender, new EventRoutingArgs(routine));
-            }
-            catch
-            {
 
-            }
-        }
         /**********************************************************
         * FUNCTION:     Timer
         * DESCRIPTION:
@@ -162,24 +170,65 @@ namespace CaliboxLibrary
 
         private void TimerSender_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            TrySend();
+        }
+
+        private bool _IsSending;
+        private void TrySend()
+        {
+            if (_IsSending) { return; }
+
             if (Index >= Routing.Count)
             {
-                _TimerSender.Stop();
+                Stop();
                 return;
             }
-            var i = Send(Index);
-            if (i != Index)
+
+            _IsSending = true;
+            try
             {
-                Index = i;
-                if (Index < Routing.Count)
+                var i = Send(Index);
+                if (i != Index)
                 {
-                    SelectedRoutine = Routing[Index];
-                }
-                else
-                {
-                    _TimerSender.Stop();
+                    TrySetCurrent(i);
                 }
             }
+            finally
+            {
+                _IsSending = false;
+            }
+        }
+
+        private bool CanExecuteNext()
+        {
+            if (RetriesCount < 1)
+            {
+                return true;
+            }
+
+            if (IsDataReceived)
+            {
+                if (Current.NextOnAnswer)
+                {
+                    return true;
+                }
+            }
+            bool elapsed = IsTimeElapsed();
+            return elapsed;
+        }
+
+        private int Send(int nowRunningIndex)
+        {
+            if (CanExecuteNext())
+            {
+                if (IsRetry && IsDataReceived == false)
+                {
+                    OnCommandSend(this, Current);
+                    return nowRunningIndex;
+                }
+                nowRunningIndex++;
+            }
+            return nowRunningIndex;
         }
     }
 }

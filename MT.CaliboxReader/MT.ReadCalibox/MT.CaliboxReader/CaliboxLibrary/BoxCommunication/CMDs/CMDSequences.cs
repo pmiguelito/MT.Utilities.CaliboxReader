@@ -1,30 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CaliboxLibrary.BoxCommunication.CMDs
 {
     public class CMDSequences
     {
-        public DeviceCom Device { get; set; }
+        private DeviceCom _Device;
+        public DeviceCom Device
+        {
+            get { return _Device; }
+            set
+            {
+                if (_Device != null)
+                {
+                    _Device.DataReceived -= Device_DataReceived;
+                }
+                _Device = value;
+                if (value != null)
+                {
+                    _Device.DataReceived += Device_DataReceived;
+                }
+            }
+        }
         public CMDSequences()
         {
-            Create();
-            Init_Timer();
+            CreateDataValues();
         }
 
         public CMDSequences(DeviceCom device) : this()
         {
             Device = device;
         }
+
+        private void Device_DataReceived(object sender, EventDataArgs e)
+        {
+            if (e.CmdSended?.OpCode != Routing.Current?.OpCode)
+            {
+                return;
+            }
+            Routing.IsDataReceived = e.IsOpCodeReceivedAnswer;
+        }
+
         /************************************************
-         * FUNCTION:    Container
-         * DESCRIPTION:
-         ************************************************/
+        * FUNCTION:    Container
+        * DESCRIPTION:
+        ************************************************/
         public Dictionary<Enum, CmdSequence> DataValues { get; set; }
             = new Dictionary<Enum, CmdSequence>();
-        private void Create()
+
+        private void CreateDataValues()
         {
             DataValues.Add(CaliboxLibrary.CMDs.InitBox_S999, CMD.New_InitBox());
 
@@ -60,9 +85,9 @@ namespace CaliboxLibrary.BoxCommunication.CMDs
          * FUNCTION:    Events
          * DESCRIPTION:
          ************************************************/
-        public EventHandler<EventRoutingArgs> CommandSended;
+        public EventHandler<EventRoutingArgs> CommandSend;
 
-        public void OnCommandSended(object sender, EventRoutingArgs e)
+        public void OnCommandSend(object sender, EventRoutingArgs e)
         {
             Task.Run(() =>
             {
@@ -77,7 +102,7 @@ namespace CaliboxLibrary.BoxCommunication.CMDs
                     {
                         IsLoggingActivated = !IsLoggingActivated;
                     }
-                    CommandSended?.Invoke(this, e);
+                    OnCommandSend(e);
                 }
                 catch
                 {
@@ -85,29 +110,28 @@ namespace CaliboxLibrary.BoxCommunication.CMDs
                 }
             });
         }
-        //public void OnCommandSended(CmdDefinition routine)
-        //{
 
-        //    OnCommandSended(this, new EventRoutingArgs(routine));
-        //}
+        private void OnCommandSend(EventRoutingArgs e)
+        {
+            CommandSend?.Invoke(this, e);
+        }
 
         /************************************************
          * FUNCTION:    Data Selection
          * DESCRIPTION:
          ************************************************/
-        //public List<CmdDefinition> Routing { get; set; } = new List<CmdDefinition>();
-        //public int Index { get; private set; }
         private CmdSequence _Routing;
         public CmdSequence Routing
         {
             get { return _Routing; }
             private set { _Routing = value; }
         }
+
         public DateTime TimeStart { get; private set; }
 
-        public bool IsLoggingActivated { get; set; }
+        public bool IsLoggingActivated { get; private set; }
 
-        public bool IsBoxInitialized { get; set; }
+        public bool IsBoxInitialized { get; private set; }
 
         public bool IsRunning { get; private set; }
 
@@ -117,17 +141,20 @@ namespace CaliboxLibrary.BoxCommunication.CMDs
          ************************************************/
         private void Reset()
         {
-            //Index = -1;
-            //Routing = null;
             Routing?.Reset();
         }
 
         public bool Start(Enum cmd)
         {
+            if (_Routing?.IsRunning ?? false == true)
+            {
+                return false;
+            }
+
             Reset();
             if (_Routing != null)
             {
-                _Routing.CommandSended -= OnCommandSended;
+                _Routing.CommandSend -= OnCommandSend;
             }
 
             if (DataValues.TryGetValue(cmd, out _Routing) == false)
@@ -144,104 +171,11 @@ namespace CaliboxLibrary.BoxCommunication.CMDs
                     return false;
                 }
             }
-            Routing.CommandSended += OnCommandSended;
+            Routing.CommandSend += OnCommandSend;
             IsRunning = true;
-            //selection.Reset();
-            //Routing = selection.Routing;
             TimeStart = DateTime.Now;
-            //SetSelection(0);
-
-            //_TimerSender.Start();
             Routing?.Start();
             return true;
-        }
-
-        //private bool SetSelection(int index)
-        //{
-        //    if (Index != index)
-        //    {
-        //        if (Routing != null)
-        //        {
-        //            //SelectedRoutine.IsRunning = false;
-        //        }
-        //        Index = index;
-        //    }
-        //    if (Index < Routing.Count)
-        //    {
-        //        Routing = Routing[Index];
-        //        if (SelectedRoutine.OpCode == OpCode.G906)
-        //        {
-        //            if (IsLoggingActivated)
-        //            {
-        //                if (Routing.Count > 1)
-        //                {
-        //                    Index++;
-        //                    return SetSelection(Index);
-        //                }
-        //            }
-        //        }
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        //private bool MoveNext()
-        //{
-        //    if (Index < Routing.Count)
-        //    {
-        //        if (SelectedRoutine.IsRunning == false)
-        //        {
-        //            SelectedRoutine.Start();
-        //            OnCommandSended(SelectedRoutine);
-        //            return true;
-        //        }
-        //        if (SelectedRoutine.IsTimeElapsed)
-        //        {
-        //            if (SelectedRoutine.IsRetry)
-        //            {
-        //                SelectedRoutine.Start();
-        //                OnCommandSended(SelectedRoutine);
-        //                return true;
-        //            }
-
-        //            Index++;
-        //            if (SetSelection(Index))
-        //            {
-        //                return MoveNext();
-        //            }
-        //        }
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        /**********************************************************
-        * FUNCTION:     Timer
-        * DESCRIPTION:
-        ***********************************************************/
-        private Timer _TimerSender = new Timer();
-        private int _TimerInterval = 200;
-        private void Init_Timer()
-        {
-            if (_TimerSender != null)
-            {
-                _TimerSender.Tick -= TimerSender_Tick;
-            }
-            _TimerSender = new Timer
-            {
-                Interval = _TimerInterval
-            };
-            _TimerSender.Tick += TimerSender_Tick;
-        }
-
-        private void TimerSender_Tick(object sender, EventArgs e)
-        {
-            //if (MoveNext() == false)
-            //{
-            //    IsRunning = false;
-            //    _TimerSender.Stop();
-            //    return;
-            //}
         }
     }
 }

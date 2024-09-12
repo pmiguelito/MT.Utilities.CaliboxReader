@@ -291,14 +291,15 @@ namespace ReadCalibox
         {
             if (_CMDSequences != null)
             {
-                _CMDSequences.CommandSended -= CommandSended;
-                _CMDSequences.CommandSended += CommandSended;
+                _CMDSequences.CommandSend -= CommandSended;
+                _CMDSequences.CommandSend += CommandSended;
+                _CMDSequences.Device = Device;
                 return;
             }
             if (_CMDSequences == null)
             {
                 _CMDSequences = new CMDSequences(Device);
-                _CMDSequences.CommandSended += CommandSended;
+                _CMDSequences.CommandSend += CommandSended;
             }
         }
 
@@ -307,19 +308,19 @@ namespace ReadCalibox
         {
             bool waitSet = false;
             string waitText = $"WAIT {e.Routine.WaitMilliseconds / 1000:0} sec";
-            if (e.Routine.Description != _LastCommandDescription)
+            if (e.Routine.Name != _LastCommandDescription)
             {
-                _LastCommandDescription = e.Routine.Description;
+                _LastCommandDescription = e.Routine.Name;
                 if (_LastCommandDescription.StartsWith("["))
                 {
                     if (e.Routine.WaitMilliseconds > 2000)
                     {
-                        Message($"{e.Routine.Description} / {waitText}");
+                        Message($"{e.Routine.Name} / {waitText}");
                         waitSet = true;
                     }
                     else
                     {
-                        Message(e.Routine.Description);
+                        Message(e.Routine.Name);
                     }
                 }
             }
